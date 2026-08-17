@@ -102,8 +102,18 @@ export const Navbar: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  // Close mobile menu on route change
-  useEffect(() => { setIsOpen(false); setActiveDropdown(null); }, [location]);
+  const handleHomeClick = (e: React.MouseEvent) => {
+    closeAll();
+    if (location === "/") {
+      e.preventDefault();
+      const heroEl = document.getElementById("top");
+      if (heroEl) {
+        heroEl.scrollIntoView({ behavior: "smooth" });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+  };
 
   const navLinks = [
     { name: "About", path: "/about" },
@@ -116,13 +126,21 @@ export const Navbar: React.FC = () => {
     <header className="aurexion-nav" ref={dropdownRef}>
       <div className="aurexion-nav-inner">
         {/* Logo */}
-        <Link href="/" className="nav-logo" onClick={closeAll}>
+        <Link href="/" className="nav-logo" onClick={handleHomeClick}>
           <img src="/manus-storage/aurexion-mark_e8f9e729.png" alt="Aurexion" className="nav-logo-mark" />
           <span className="nav-logo-text">AUREXION</span>
         </Link>
 
         {/* Desktop Nav */}
         <nav className="nav-desktop">
+          <Link
+            href="/"
+            className={`nav-link ${location === "/" ? "nav-link-active" : ""}`}
+            onClick={handleHomeClick}
+          >
+            HOME
+          </Link>
+
           {/* Services mega */}
           <div
             className="nav-item-wrap"
@@ -230,6 +248,13 @@ export const Navbar: React.FC = () => {
             ))}
           </div>
           <div className="nav-mobile-section">
+            <Link
+              href="/"
+              className={`nav-mobile-link font-semibold ${location === "/" ? "text-[#63f5e8]" : ""}`}
+              onClick={handleHomeClick}
+            >
+              HOME
+            </Link>
             {navLinks.map((link) => (
               <Link
                 key={link.name}

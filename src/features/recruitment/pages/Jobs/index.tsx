@@ -36,9 +36,9 @@ export const Jobs: React.FC = () => {
   const [createForm, setCreateForm] = useState<JobCreatePayload>({
     job_id: "",
     title: "",
-    department: "Engineering",
-    location: "Remote",
-    experience: "3+ Years",
+    department: "",
+    location: "",
+    experience: "",
     skills: "",
     responsibilities: "",
     status: "ACTIVE",
@@ -95,9 +95,9 @@ export const Jobs: React.FC = () => {
       setCreateForm({
         job_id: "",
         title: "",
-        department: "Engineering",
-        location: "Remote",
-        experience: "3+ Years",
+        department: "",
+        location: "",
+        experience: "",
         skills: "",
         responsibilities: "",
         status: "ACTIVE",
@@ -433,14 +433,14 @@ export const Jobs: React.FC = () => {
 
       {/* Create Job Vacancy Modal */}
       {isCreateOpen && (
-        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(5, 8, 17, 0.8)", backdropFilter: "blur(8px)", display: "grid", placeItems: "center", zIndex: 50, padding: "1.5rem" }}>
-          <Card borderAccent style={{ width: "100%", maxWidth: "600px", maxHeight: "90vh", overflowY: "auto", padding: "2rem" }}>
+        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(5, 8, 17, 0.85)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "1.5rem", overflowY: "auto" }}>
+          <Card borderAccent style={{ width: "100%", maxWidth: "620px", maxHeight: "90vh", overflowY: "auto", overflowX: "hidden", padding: "2rem", boxSizing: "border-box", margin: "auto" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
               <div>
                 <p className="eyebrow" style={{ margin: 0 }}>TALENT OPENING</p>
                 <h2 style={{ fontSize: "1.5rem", margin: "0.25rem 0 0 0" }}>Create Job Vacancy</h2>
               </div>
-              <button onClick={() => setIsCreateOpen(false)} style={{ background: "none", border: 0, color: "#94a3b8", cursor: "pointer" }}>
+              <button onClick={() => setIsCreateOpen(false)} style={{ background: "none", border: 0, color: "#94a3b8", cursor: "pointer", padding: "0.25rem" }}>
                 <X size={20} />
               </button>
             </div>
@@ -460,8 +460,8 @@ export const Jobs: React.FC = () => {
               </div>
             )}
 
-            <form onSubmit={handleCreateSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "1rem" }}>
+            <form onSubmit={handleCreateSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.1rem", width: "100%" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 2fr)", gap: "1rem" }}>
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
                   <label style={{ fontSize: "0.75rem", fontFamily: "IBM Plex Mono, monospace", color: "#94a3b8" }}>JOB ID *</label>
                   <input
@@ -470,7 +470,7 @@ export const Jobs: React.FC = () => {
                     placeholder="e.g. AI-003"
                     value={createForm.job_id}
                     onChange={(e) => setCreateForm({ ...createForm, job_id: e.target.value })}
-                    style={{ padding: "0.6rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px" }}
+                    style={{ width: "100%", boxSizing: "border-box", padding: "0.65rem 0.75rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px" }}
                   />
                 </div>
 
@@ -482,19 +482,20 @@ export const Jobs: React.FC = () => {
                     placeholder="e.g. Full Stack Engineer"
                     value={createForm.title}
                     onChange={(e) => setCreateForm({ ...createForm, title: e.target.value })}
-                    style={{ padding: "0.6rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px" }}
+                    style={{ width: "100%", boxSizing: "border-box", padding: "0.65rem 0.75rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px" }}
                   />
                 </div>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "0.75rem" }}>
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
                   <label style={{ fontSize: "0.75rem", fontFamily: "IBM Plex Mono, monospace", color: "#94a3b8" }}>DEPARTMENT</label>
                   <input
                     type="text"
+                    placeholder="e.g. Engineering"
                     value={createForm.department}
                     onChange={(e) => setCreateForm({ ...createForm, department: e.target.value })}
-                    style={{ padding: "0.6rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px" }}
+                    style={{ width: "100%", boxSizing: "border-box", padding: "0.65rem 0.75rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px" }}
                   />
                 </div>
 
@@ -502,9 +503,10 @@ export const Jobs: React.FC = () => {
                   <label style={{ fontSize: "0.75rem", fontFamily: "IBM Plex Mono, monospace", color: "#94a3b8" }}>LOCATION</label>
                   <input
                     type="text"
+                    placeholder="e.g. Remote"
                     value={createForm.location}
                     onChange={(e) => setCreateForm({ ...createForm, location: e.target.value })}
-                    style={{ padding: "0.6rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px" }}
+                    style={{ width: "100%", boxSizing: "border-box", padding: "0.65rem 0.75rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px" }}
                   />
                 </div>
 
@@ -512,9 +514,10 @@ export const Jobs: React.FC = () => {
                   <label style={{ fontSize: "0.75rem", fontFamily: "IBM Plex Mono, monospace", color: "#94a3b8" }}>EXPERIENCE</label>
                   <input
                     type="text"
+                    placeholder="e.g. 3+ Years"
                     value={createForm.experience}
                     onChange={(e) => setCreateForm({ ...createForm, experience: e.target.value })}
-                    style={{ padding: "0.6rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px" }}
+                    style={{ width: "100%", boxSizing: "border-box", padding: "0.65rem 0.75rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px" }}
                   />
                 </div>
               </div>
@@ -526,7 +529,7 @@ export const Jobs: React.FC = () => {
                   placeholder="e.g. React, TypeScript, Node.js, GraphQL"
                   value={createForm.skills}
                   onChange={(e) => setCreateForm({ ...createForm, skills: e.target.value })}
-                  style={{ padding: "0.6rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px" }}
+                  style={{ width: "100%", boxSizing: "border-box", padding: "0.65rem 0.75rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px" }}
                 />
               </div>
 
@@ -537,11 +540,11 @@ export const Jobs: React.FC = () => {
                   placeholder="Describe key responsibilities and deliverables..."
                   value={createForm.responsibilities}
                   onChange={(e) => setCreateForm({ ...createForm, responsibilities: e.target.value })}
-                  style={{ padding: "0.6rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px", resize: "vertical" }}
+                  style={{ width: "100%", boxSizing: "border-box", padding: "0.65rem 0.75rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px", resize: "vertical" }}
                 />
               </div>
 
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.75rem", marginTop: "1rem" }}>
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.75rem", marginTop: "0.5rem" }}>
                 <Button type="button" variant="outline" onClick={() => setIsCreateOpen(false)}>Cancel</Button>
                 <Button type="submit" glow disabled={actionLoading}>
                   {actionLoading ? "Publishing..." : "Publish Vacancy"}
@@ -554,14 +557,14 @@ export const Jobs: React.FC = () => {
 
       {/* Edit Job Vacancy Modal */}
       {isEditOpen && editingJob && (
-        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(5, 8, 17, 0.8)", backdropFilter: "blur(8px)", display: "grid", placeItems: "center", zIndex: 50, padding: "1.5rem" }}>
-          <Card borderAccent style={{ width: "100%", maxWidth: "600px", maxHeight: "90vh", overflowY: "auto", padding: "2rem" }}>
+        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(5, 8, 17, 0.85)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "1.5rem", overflowY: "auto" }}>
+          <Card borderAccent style={{ width: "100%", maxWidth: "620px", maxHeight: "90vh", overflowY: "auto", overflowX: "hidden", padding: "2rem", boxSizing: "border-box", margin: "auto" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
               <div>
                 <p className="eyebrow" style={{ margin: 0 }}>EDIT VACANCY // {editingJob.job_id}</p>
                 <h2 style={{ fontSize: "1.5rem", margin: "0.25rem 0 0 0" }}>Update Job Specification</h2>
               </div>
-              <button onClick={() => setIsEditOpen(false)} style={{ background: "none", border: 0, color: "#94a3b8", cursor: "pointer" }}>
+              <button onClick={() => setIsEditOpen(false)} style={{ background: "none", border: 0, color: "#94a3b8", cursor: "pointer", padding: "0.25rem" }}>
                 <X size={20} />
               </button>
             </div>
@@ -581,7 +584,7 @@ export const Jobs: React.FC = () => {
               </div>
             )}
 
-            <form onSubmit={handleEditSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <form onSubmit={handleEditSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.1rem", width: "100%" }}>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
                 <label style={{ fontSize: "0.75rem", fontFamily: "IBM Plex Mono, monospace", color: "#94a3b8" }}>JOB TITLE</label>
                 <input
@@ -589,18 +592,19 @@ export const Jobs: React.FC = () => {
                   required
                   value={editForm.title || ""}
                   onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
-                  style={{ padding: "0.6rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px" }}
+                  style={{ width: "100%", boxSizing: "border-box", padding: "0.65rem 0.75rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px" }}
                 />
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "0.75rem" }}>
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
                   <label style={{ fontSize: "0.75rem", fontFamily: "IBM Plex Mono, monospace", color: "#94a3b8" }}>DEPARTMENT</label>
                   <input
                     type="text"
+                    placeholder="e.g. Engineering"
                     value={editForm.department || ""}
                     onChange={(e) => setEditForm({ ...editForm, department: e.target.value })}
-                    style={{ padding: "0.6rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px" }}
+                    style={{ width: "100%", boxSizing: "border-box", padding: "0.65rem 0.75rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px" }}
                   />
                 </div>
 
@@ -608,9 +612,10 @@ export const Jobs: React.FC = () => {
                   <label style={{ fontSize: "0.75rem", fontFamily: "IBM Plex Mono, monospace", color: "#94a3b8" }}>LOCATION</label>
                   <input
                     type="text"
+                    placeholder="e.g. Remote"
                     value={editForm.location || ""}
                     onChange={(e) => setEditForm({ ...editForm, location: e.target.value })}
-                    style={{ padding: "0.6rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px" }}
+                    style={{ width: "100%", boxSizing: "border-box", padding: "0.65rem 0.75rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px" }}
                   />
                 </div>
 
@@ -619,7 +624,7 @@ export const Jobs: React.FC = () => {
                   <select
                     value={editForm.status || "ACTIVE"}
                     onChange={(e) => setEditForm({ ...editForm, status: e.target.value })}
-                    style={{ padding: "0.6rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px" }}
+                    style={{ width: "100%", boxSizing: "border-box", padding: "0.65rem 0.75rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px" }}
                   >
                     <option value="ACTIVE">Active</option>
                     <option value="CLOSED">Closed</option>
@@ -634,7 +639,7 @@ export const Jobs: React.FC = () => {
                   type="text"
                   value={editForm.skills || ""}
                   onChange={(e) => setEditForm({ ...editForm, skills: e.target.value })}
-                  style={{ padding: "0.6rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px" }}
+                  style={{ width: "100%", boxSizing: "border-box", padding: "0.65rem 0.75rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px" }}
                 />
               </div>
 
@@ -644,11 +649,11 @@ export const Jobs: React.FC = () => {
                   rows={3}
                   value={editForm.responsibilities || ""}
                   onChange={(e) => setEditForm({ ...editForm, responsibilities: e.target.value })}
-                  style={{ padding: "0.6rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px", resize: "vertical" }}
+                  style={{ width: "100%", boxSizing: "border-box", padding: "0.65rem 0.75rem", backgroundColor: "#050811", border: "1px solid rgba(140, 174, 187, 0.25)", color: "#f8fafc", borderRadius: "4px", resize: "vertical" }}
                 />
               </div>
 
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.75rem", marginTop: "1rem" }}>
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.75rem", marginTop: "0.5rem" }}>
                 <Button type="button" variant="outline" onClick={() => setIsEditOpen(false)}>Cancel</Button>
                 <Button type="submit" glow disabled={actionLoading}>
                   {actionLoading ? "Saving..." : "Save Changes"}

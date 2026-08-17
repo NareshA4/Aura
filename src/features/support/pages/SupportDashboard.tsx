@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { LifeBuoy, Clock, ShieldAlert, CheckCircle2, ListChecks, ArrowRight, UserCheck, AlertCircle } from "lucide-react";
 import Card from "../../../components/ui/card";
 import Button from "../../../components/ui/button";
+import { Skeleton } from "../../../components/ui/skeleton";
 import { ErrorState, LoadingState, EmptyState } from "../../portal/components/StateViews";
 import { TicketCategoryBadge, TicketPriorityBadge, TicketStatusBadge } from "../../portal/components/TicketMeta";
 import { formatDateTime } from "../../portal/utils/format";
@@ -14,88 +15,122 @@ export const SupportDashboard: React.FC = () => {
   const stats = tickets.data ? buildTicketStats(tickets.data) : null;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "2rem", width: "100%", maxWidth: "100%" }}>
       {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "1rem" }}>
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4" style={{ width: "100%" }}>
         <div>
-          <p className="eyebrow" style={{ color: "#63f5e8", display: "flex", alignItems: "center", gap: "0.4rem" }}>
+          <p className="eyebrow" style={{ color: "#63f5e8", display: "flex", alignItems: "center", gap: "0.4rem", margin: 0 }}>
             <LifeBuoy size={14} /> SUPPORT EXECUTIVE DESK
           </p>
-          <h1 style={{ fontSize: "2rem", margin: "0.25rem 0 0 0", fontFamily: "var(--font-display)", fontWeight: 600 }}>
+          <h1 style={{ fontSize: "2rem", margin: "0.5rem 0 0 0", fontFamily: "var(--font-display)", fontWeight: 600, lineHeight: 1.2 }}>
             Support Operations Dashboard
           </h1>
-          <p style={{ color: "#94a3b8", fontSize: "0.9rem", margin: "0.25rem 0 0 0" }}>
+          <p style={{ color: "#94a3b8", fontSize: "0.9rem", margin: "0.5rem 0 0 0", lineHeight: 1.4 }}>
             Real-time control center for client inquiries, ticket assignments, and issue resolutions.
           </p>
         </div>
-        <Link href="/support/tickets">
-          <Button glow size="sm">
+        <Link href="/support/tickets" style={{ flexShrink: 0 }}>
+          <Button glow size="sm" style={{ height: "40px", display: "flex", alignItems: "center", gap: "8px" }}>
             <ListChecks size={14} />
             View All Tickets
           </Button>
         </Link>
       </div>
 
-      {tickets.isLoading ? (
-        <LoadingState rows={4} label="Loading support operations metrics" />
-      ) : tickets.isError ? (
+      {tickets.isError && !tickets.data ? (
         <ErrorState error={tickets.error} onRetry={tickets.refetch} title="Unable to load support tickets queue" />
-      ) : stats ? (
+      ) : (
         <>
           {/* KPI Metrics */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.25rem" }}>
-            <Card glowOnHover>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <span style={{ fontSize: "0.75rem", fontFamily: "IBM Plex Mono, monospace", color: "#94a3b8" }}>TOTAL ASSIGNED</span>
-                <LifeBuoy size={18} style={{ color: "#63f5e8" }} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" style={{ width: "100%" }}>
+            <Card glowOnHover className="h-full min-h-[160px] p-6 flex flex-col justify-between" style={{ boxSizing: "border-box" }}>
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "12px" }}>
+                <span style={{ fontSize: "0.75rem", fontFamily: "IBM Plex Mono, monospace", color: "#94a3b8", fontWeight: 500 }}>TOTAL ASSIGNED</span>
+                <LifeBuoy size={18} style={{ color: "#63f5e8", flexShrink: 0 }} />
               </div>
-              <p style={{ fontSize: "2rem", fontWeight: 600, color: "#63f5e8", margin: "0.5rem 0 0 0" }}>{stats.total}</p>
-              <span style={{ color: "#64748b", fontSize: "0.8rem" }}>Assigned support tickets</span>
+              <div style={{ margin: "14px 0" }}>
+                {tickets.isLoading && !stats ? (
+                  <Skeleton className="h-8 w-16" />
+                ) : (
+                  <p style={{ fontSize: "2rem", fontWeight: 600, color: "#63f5e8", margin: 0, lineHeight: 1.1 }}>{stats?.total ?? 0}</p>
+                )}
+              </div>
+              <div style={{ color: "#64748b", fontSize: "0.8rem" }}>Assigned support tickets</div>
             </Card>
 
-            <Card glowOnHover>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <span style={{ fontSize: "0.75rem", fontFamily: "IBM Plex Mono, monospace", color: "#94a3b8" }}>OPEN & ASSIGNED</span>
-                <Clock size={18} style={{ color: "#fbbf24" }} />
+            <Card glowOnHover className="h-full min-h-[160px] p-6 flex flex-col justify-between" style={{ boxSizing: "border-box" }}>
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "12px" }}>
+                <span style={{ fontSize: "0.75rem", fontFamily: "IBM Plex Mono, monospace", color: "#94a3b8", fontWeight: 500 }}>OPEN & ASSIGNED</span>
+                <Clock size={18} style={{ color: "#fbbf24", flexShrink: 0 }} />
               </div>
-              <p style={{ fontSize: "2rem", fontWeight: 600, color: "#fbbf24", margin: "0.5rem 0 0 0" }}>{stats.open + stats.assigned}</p>
-              <span style={{ color: "#64748b", fontSize: "0.8rem" }}>Awaiting executive action</span>
+              <div style={{ margin: "14px 0" }}>
+                {tickets.isLoading && !stats ? (
+                  <Skeleton className="h-8 w-16" />
+                ) : (
+                  <p style={{ fontSize: "2rem", fontWeight: 600, color: "#fbbf24", margin: 0, lineHeight: 1.1 }}>{(stats?.open ?? 0) + (stats?.assigned ?? 0)}</p>
+                )}
+              </div>
+              <div style={{ color: "#64748b", fontSize: "0.8rem" }}>Awaiting executive action</div>
             </Card>
 
-            <Card glowOnHover>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <span style={{ fontSize: "0.75rem", fontFamily: "IBM Plex Mono, monospace", color: "#94a3b8" }}>IN PROGRESS</span>
-                <UserCheck size={18} style={{ color: "#60a5fa" }} />
+            <Card glowOnHover className="h-full min-h-[160px] p-6 flex flex-col justify-between" style={{ boxSizing: "border-box" }}>
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "12px" }}>
+                <span style={{ fontSize: "0.75rem", fontFamily: "IBM Plex Mono, monospace", color: "#94a3b8", fontWeight: 500 }}>IN PROGRESS</span>
+                <UserCheck size={18} style={{ color: "#60a5fa", flexShrink: 0 }} />
               </div>
-              <p style={{ fontSize: "2rem", fontWeight: 600, color: "#60a5fa", margin: "0.5rem 0 0 0" }}>{stats.inProgress}</p>
-              <span style={{ color: "#64748b", fontSize: "0.8rem" }}>Currently being resolved</span>
+              <div style={{ margin: "14px 0" }}>
+                {tickets.isLoading && !stats ? (
+                  <Skeleton className="h-8 w-16" />
+                ) : (
+                  <p style={{ fontSize: "2rem", fontWeight: 600, color: "#60a5fa", margin: 0, lineHeight: 1.1 }}>{stats?.inProgress ?? 0}</p>
+                )}
+              </div>
+              <div style={{ color: "#64748b", fontSize: "0.8rem" }}>Currently being resolved</div>
             </Card>
 
-            <Card glowOnHover>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <span style={{ fontSize: "0.75rem", fontFamily: "IBM Plex Mono, monospace", color: "#94a3b8" }}>AWAITING CLIENT</span>
-                <AlertCircle size={18} style={{ color: "#c4b5fd" }} />
+            <Card glowOnHover className="h-full min-h-[160px] p-6 flex flex-col justify-between" style={{ boxSizing: "border-box" }}>
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "12px" }}>
+                <span style={{ fontSize: "0.75rem", fontFamily: "IBM Plex Mono, monospace", color: "#94a3b8", fontWeight: 500 }}>AWAITING CLIENT</span>
+                <AlertCircle size={18} style={{ color: "#c4b5fd", flexShrink: 0 }} />
               </div>
-              <p style={{ fontSize: "2rem", fontWeight: 600, color: "#c4b5fd", margin: "0.5rem 0 0 0" }}>{stats.awaitingClient}</p>
-              <span style={{ color: "#64748b", fontSize: "0.8rem" }}>Client feedback pending</span>
+              <div style={{ margin: "14px 0" }}>
+                {tickets.isLoading && !stats ? (
+                  <Skeleton className="h-8 w-16" />
+                ) : (
+                  <p style={{ fontSize: "2rem", fontWeight: 600, color: "#c4b5fd", margin: 0, lineHeight: 1.1 }}>{stats?.awaitingClient ?? 0}</p>
+                )}
+              </div>
+              <div style={{ color: "#64748b", fontSize: "0.8rem" }}>Client feedback pending</div>
             </Card>
 
-            <Card glowOnHover>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <span style={{ fontSize: "0.75rem", fontFamily: "IBM Plex Mono, monospace", color: "#94a3b8" }}>RESOLVED & CLOSED</span>
-                <CheckCircle2 size={18} style={{ color: "#4ade80" }} />
+            <Card glowOnHover className="h-full min-h-[160px] p-6 flex flex-col justify-between" style={{ boxSizing: "border-box" }}>
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "12px" }}>
+                <span style={{ fontSize: "0.75rem", fontFamily: "IBM Plex Mono, monospace", color: "#94a3b8", fontWeight: 500 }}>RESOLVED & CLOSED</span>
+                <CheckCircle2 size={18} style={{ color: "#4ade80", flexShrink: 0 }} />
               </div>
-              <p style={{ fontSize: "2rem", fontWeight: 600, color: "#4ade80", margin: "0.5rem 0 0 0" }}>{stats.resolved + stats.closed}</p>
-              <span style={{ color: "#64748b", fontSize: "0.8rem" }}>Resolved & closed tickets</span>
+              <div style={{ margin: "14px 0" }}>
+                {tickets.isLoading && !stats ? (
+                  <Skeleton className="h-8 w-16" />
+                ) : (
+                  <p style={{ fontSize: "2rem", fontWeight: 600, color: "#4ade80", margin: 0, lineHeight: 1.1 }}>{(stats?.resolved ?? 0) + (stats?.closed ?? 0)}</p>
+                )}
+              </div>
+              <div style={{ color: "#64748b", fontSize: "0.8rem" }}>Resolved & closed tickets</div>
             </Card>
 
-            <Card glowOnHover>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <span style={{ fontSize: "0.75rem", fontFamily: "IBM Plex Mono, monospace", color: "#ef4444" }}>CRITICAL PRIORITY</span>
-                <ShieldAlert size={18} style={{ color: "#ef4444" }} />
+            <Card glowOnHover className="h-full min-h-[160px] p-6 flex flex-col justify-between" style={{ boxSizing: "border-box" }}>
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "12px" }}>
+                <span style={{ fontSize: "0.75rem", fontFamily: "IBM Plex Mono, monospace", color: "#ef4444", fontWeight: 500 }}>CRITICAL PRIORITY</span>
+                <ShieldAlert size={18} style={{ color: "#ef4444", flexShrink: 0 }} />
               </div>
-              <p style={{ fontSize: "2rem", fontWeight: 600, color: "#ef4444", margin: "0.5rem 0 0 0" }}>{stats.critical}</p>
-              <span style={{ color: "#64748b", fontSize: "0.8rem" }}>Urgent intervention required</span>
+              <div style={{ margin: "14px 0" }}>
+                {tickets.isLoading && !stats ? (
+                  <Skeleton className="h-8 w-16" />
+                ) : (
+                  <p style={{ fontSize: "2rem", fontWeight: 600, color: "#ef4444", margin: 0, lineHeight: 1.1 }}>{stats?.critical ?? 0}</p>
+                )}
+              </div>
+              <div style={{ color: "#64748b", fontSize: "0.8rem" }}>Urgent intervention required</div>
             </Card>
           </div>
 
@@ -115,7 +150,9 @@ export const SupportDashboard: React.FC = () => {
               </Link>
             </div>
 
-            {tickets.data && tickets.data.length === 0 ? (
+            {tickets.isLoading && !tickets.data ? (
+              <LoadingState rows={4} label="Loading recent tickets" />
+            ) : tickets.data && tickets.data.length === 0 ? (
               <EmptyState
                 title="No assigned tickets"
                 description="You currently have no support tickets assigned to your account."
@@ -170,7 +207,7 @@ export const SupportDashboard: React.FC = () => {
             )}
           </Card>
         </>
-      ) : null}
+      )}
     </div>
   );
 };

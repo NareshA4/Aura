@@ -402,8 +402,8 @@ export const Applications: React.FC = () => {
 
       {/* Application Review & Stage Progression Drawer/Modal */}
       {reviewApp && (
-        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(5, 8, 17, 0.8)", backdropFilter: "blur(8px)", display: "grid", placeItems: "center", zIndex: 50, padding: "1.5rem" }}>
-          <Card borderAccent style={{ width: "100%", maxWidth: "680px", maxHeight: "90vh", overflowY: "auto", padding: "2rem" }}>
+        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(5, 8, 17, 0.85)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "1.5rem", overflowY: "auto" }}>
+          <Card borderAccent style={{ width: "100%", maxWidth: "680px", maxHeight: "90vh", overflowY: "auto", overflowX: "hidden", padding: "2rem", boxSizing: "border-box", margin: "auto" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1.5rem" }}>
               <div>
                 <p className="eyebrow" style={{ margin: 0 }}>CANDIDATE APPLICATION REVIEW</p>

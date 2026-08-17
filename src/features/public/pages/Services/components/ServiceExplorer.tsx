@@ -1,10 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { serviceCategories, servicesData } from "../../../../../data/services";
 import { ChevronRight, ArrowRight } from "lucide-react";
 
 export const ServiceExplorer: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState(serviceCategories[0].name);
+  const [activeCategory, setActiveCategory] = useState(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const catParam = params.get("category");
+      if (catParam && serviceCategories.some((c: any) => c.name === catParam)) {
+        return catParam;
+      }
+    }
+    return serviceCategories[0].name;
+  });
+
+  useEffect(() => {
+    const syncCategoryFromUrl = () => {
+      const params = new URLSearchParams(window.location.search);
+      const catParam = params.get("category");
+      if (catParam && serviceCategories.some((c: any) => c.name === catParam)) {
+        setActiveCategory(catParam);
+      }
+    };
+    syncCategoryFromUrl();
+  }, []);
   
   const activeServices = servicesData.filter((s: any) => s.category === activeCategory);
 

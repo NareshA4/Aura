@@ -51,7 +51,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ open }) => {
   const navItems = SIDEBAR_NAV[role] || [];
 
   return (
-    <aside style={{
+    <aside className="max-md:absolute max-md:left-0 max-md:top-[70px] max-md:z-50" style={{
       width: "260px",
       backgroundColor: "#0c1222",
       borderRight: "1px solid #1e293b",
@@ -68,7 +68,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ open }) => {
         fontFamily: "IBM Plex Mono, monospace",
         fontSize: "0.75rem",
         color: "#64748b",
-        padding: "0 0.5rem 0.75rem 0.5rem",
+        padding: "0 1rem 0.75rem 1rem",
         textTransform: "uppercase",
         letterSpacing: "0.1em",
         borderBottom: "1px solid #1e293b",

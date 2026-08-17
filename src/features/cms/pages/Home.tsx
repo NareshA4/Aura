@@ -1,5 +1,5 @@
 /* Midnight Signal: cinematic digital brutalism, oversized editorial type, signal-cyan routes, and interactions that reveal structure. */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { ArrowDown, ArrowUpRight, ChevronRight, Circle, Landmark, LineChart, ShieldCheck, Activity, GraduationCap, Factory, ShoppingBag, ShoppingCart, Truck, Building, HardHat, Utensils, Plane, Car, Signal, Briefcase, Rocket, Cpu, BrainCircuit, Cloud, Layers, Globe, type LucideIcon } from "lucide-react";
 import { Button } from "../../../components/ui/button";
@@ -170,6 +170,15 @@ export default function Home() {
   const { data: caseStudies } = useCaseStudies();
   const { data: blogPosts } = useBlogPosts();
 
+  useEffect(() => {
+    if (window.location.hash) {
+      const hash = window.location.hash.replace("#", "");
+      setTimeout(() => {
+        document.getElementById(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    }
+  }, []);
+
   const openDialog = (type: "contact" | "project") => setDialog(type);
   const action = (label: string) => toast.success(label, { description: "Done." });
 
@@ -182,7 +191,7 @@ export default function Home() {
           <HeroVideoBackground videoUrl="/videos/hero-bg.mp4" />
           <div className="hero-grid" />
           <div className="hero-copy reveal">
-            <p className="eyebrow"><Circle size={8} fill="currentColor" /> DIGITAL INTELLIGENCE / 001</p>
+            <p className="eyebrow"><Circle size={8} fill="currentColor" /> 01 / DIGITAL INTELLIGENCE</p>
             <h1>ENGINEERING<br /><em>WHAT COMES NEXT.</em></h1>
             <p className="hero-sub">AI. Software. Cloud. Data.<br />Engineered for the enterprise.</p>
             <div className="hero-ctas">
@@ -190,12 +199,12 @@ export default function Home() {
               <button className="text-button" onClick={() => scrollToId("estimator")}>ESTIMATE PROJECT <ArrowDown size={16} /></button>
             </div>
           </div>
-          <div className="hero-meta"><span>FROM COMPLEXITY</span><span className="meta-line" /><span>TO INTELLIGENCE</span></div>
           <div className="scroll-cue"><span>SCROLL TO EXPLORE</span><ArrowDown size={15} /></div>
         </section>
 
         {/* ── 02 STATS ─────────────────────────────────────────────────── */}
-        <section className="stats-section">
+        <section className="stats-section section-dark">
+          <div className="section-index">02 / IMPACT METRICS</div>
           <div className="stats-grid">
             {STATS.map((s) => (
               <div key={s.label} className="stat-item">
@@ -237,30 +246,40 @@ export default function Home() {
               const remaining = catServices.length - 3;
               const Icon = CATEGORY_ICONS[cat.id] ?? Cpu;
               return (
-                <Link key={cat.id} href="/services" className="service-card-pro">
+                <div key={cat.id} className="service-card-pro">
                   <div className="svc-pro-header">
                     <span className="svc-pro-num">{cat.id}</span>
                     <Icon size={18} className="svc-pro-icon" />
                   </div>
 
-                  <h3 className="svc-pro-title">{cat.name}</h3>
+                  <Link href={`/services?category=${encodeURIComponent(cat.name)}#explorer`} className="svc-pro-title hover:text-[#63f5e8] transition-colors block">
+                    {cat.name}
+                  </Link>
                   <p className="svc-pro-desc">{cat.description}</p>
 
                   <ul className="svc-pro-list">
                     {preview.map((s) => (
                       <li key={s.id}>
-                        <span className="svc-pro-bullet" />
-                        {s.name}
+                        <Link href={`/services/${s.slug}`} className="hover:text-[#63f5e8] transition-colors inline-flex items-center gap-2">
+                          <span className="svc-pro-bullet" />
+                          {s.name}
+                        </Link>
                       </li>
                     ))}
-                    {remaining > 0 && <li className="svc-pro-more">+{remaining} more capabilities</li>}
+                    {remaining > 0 && (
+                      <li className="svc-pro-more">
+                        <Link href={`/services?category=${encodeURIComponent(cat.name)}#explorer`} className="hover:underline">
+                          +{remaining} more capabilities
+                        </Link>
+                      </li>
+                    )}
                   </ul>
 
-                  <div className="svc-pro-footer">
+                  <Link href={`/services?category=${encodeURIComponent(cat.name)}#explorer`} className="svc-pro-footer group">
                     <span>EXPLORE CATEGORY</span>
                     <ArrowUpRight size={13} />
-                  </div>
-                </Link>
+                  </Link>
+                </div>
               );
             })}
           </div>
@@ -274,9 +293,10 @@ export default function Home() {
 
         {/* ── 05 AI IMMERSIVE ──────────────────────────────────────────── */}
         <section id="ai" className="immersive-section ai-section section-dark" style={{ backgroundImage: "url(/manus-storage/aurexion-neural_ae3aae0d.png)" }}>
+          <div className="section-index">05 / AI & INTELLIGENCE</div>
           <div className="immersive-overlay" />
           <div className="immersive-content">
-            <p className="eyebrow">05 / AI & INTELLIGENCE</p>
+            <p className="eyebrow">AI & INTELLIGENCE</p>
             <h2>INTELLIGENCE<br /><em>WITHOUT LIMITS.</em></h2>
             <p>From generative models to intelligent operations, we turn data into decisions that move with the business.</p>
             <Link href="/services/artificial-intelligence-solutions" className="text-button inline-flex items-center gap-2">
@@ -428,12 +448,12 @@ export default function Home() {
           </div>
           <div className="principles-grid">
             {principles.map(([num, title, desc]) => (
-              <button className="principle" key={num} onClick={() => action(`${title} principle selected`)}>
+              <Link href="/why-us" className="principle block" key={num}>
                 <span className="principle-num">{num}</span>
                 <h3>{title}</h3>
                 <p>{desc}</p>
                 <ArrowUpRight size={17} />
-              </button>
+              </Link>
             ))}
           </div>
         </section>

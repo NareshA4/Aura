@@ -359,14 +359,14 @@ export const Candidates: React.FC = () => {
 
       {/* Stage Progression Modal */}
       {isStageModalOpen && selectedCandidate && (
-        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(5, 8, 17, 0.8)", backdropFilter: "blur(8px)", display: "grid", placeItems: "center", zIndex: 50, padding: "1.5rem" }}>
-          <Card borderAccent style={{ width: "100%", maxWidth: "480px", padding: "2rem" }}>
+        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(5, 8, 17, 0.85)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "1.5rem", overflowY: "auto" }}>
+          <Card borderAccent style={{ width: "100%", maxWidth: "480px", padding: "2rem", boxSizing: "border-box", margin: "auto", overflowX: "hidden" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem" }}>
               <div>
                 <p className="eyebrow" style={{ margin: 0 }}>CANDIDATE STAGE PROGRESSION</p>
                 <h2 style={{ fontSize: "1.3rem", margin: "0.25rem 0 0 0" }}>{selectedCandidate.name}</h2>
               </div>
-              <button onClick={() => setIsStageModalOpen(false)} style={{ background: "none", border: 0, color: "#94a3b8", cursor: "pointer" }}>
+              <button onClick={() => setIsStageModalOpen(false)} style={{ background: "none", border: 0, color: "#94a3b8", cursor: "pointer", padding: "0.25rem" }}>
                 <X size={20} />
               </button>
             </div>
@@ -375,11 +375,13 @@ export const Candidates: React.FC = () => {
               Applied for <strong>{selectedCandidate.job_title}</strong>. Advance or transition candidate through the hiring pipeline:
             </p>
 
-            <form onSubmit={handleSaveStage} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <form onSubmit={handleSaveStage} style={{ display: "flex", flexDirection: "column", gap: "1rem", width: "100%" }}>
               <select
                 value={newStage}
                 onChange={(e) => setNewStage(e.target.value)}
                 style={{
+                  width: "100%",
+                  boxSizing: "border-box",
                   padding: "0.75rem",
                   backgroundColor: "#050811",
                   border: "1px solid rgba(140, 174, 187, 0.25)",

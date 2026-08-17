@@ -1,10 +1,76 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { Link } from "wouter";
 import { useJobs } from "../../hooks/usePublicContent";
-import { ArrowUpRight, Loader2, AlertCircle, MapPin, Clock } from "lucide-react";
+import { ArrowUpRight, Loader2, AlertCircle, MapPin, Clock, Search, X } from "lucide-react";
 
 export const CareersPage: React.FC = () => {
   const { data: jobs, loading, error } = useJobs();
+
+  const [search, setSearch] = useState("");
+  const [filterDept, setFilterDept] = useState("");
+  const [filterLocation, setFilterLocation] = useState("");
+  const [filterType, setFilterType] = useState("");
+
+  // Derive unique filter options from live data
+  const departments = useMemo(() => {
+    if (!jobs) return [];
+    return [...new Set(jobs.map((j: any) => j.department).filter(Boolean))].sort();
+  }, [jobs]);
+
+  const locations = useMemo(() => {
+    if (!jobs) return [];
+    return [...new Set(jobs.map((j: any) => j.location).filter(Boolean))].sort();
+  }, [jobs]);
+
+  const employmentTypes = useMemo(() => {
+    if (!jobs) return [];
+    return [...new Set(jobs.map((j: any) => j.employmentType).filter(Boolean))].sort();
+  }, [jobs]);
+
+  const filteredJobs = useMemo(() => {
+    if (!jobs) return [];
+    return jobs.filter((job: any) => {
+      const q = search.toLowerCase();
+      const matchSearch =
+        !q ||
+        job.title?.toLowerCase().includes(q) ||
+        job.department?.toLowerCase().includes(q) ||
+        job.location?.toLowerCase().includes(q) ||
+        job.description?.toLowerCase().includes(q) ||
+        (job.skills || []).some((s: string) => s.toLowerCase().includes(q));
+      const matchDept = !filterDept || job.department === filterDept;
+      const matchLoc = !filterLocation || job.location === filterLocation;
+      const matchType = !filterType || job.employmentType === filterType;
+      return matchSearch && matchDept && matchLoc && matchType;
+    });
+  }, [jobs, search, filterDept, filterLocation, filterType]);
+
+  const hasFilters = search || filterDept || filterLocation || filterType;
+
+  const clearFilters = () => {
+    setSearch("");
+    setFilterDept("");
+    setFilterLocation("");
+    setFilterType("");
+  };
+
+  const selectStyle: React.CSSProperties = {
+    background: "#0a111c",
+    border: "1px solid rgba(140,174,187,0.2)",
+    color: "#8da5ae",
+    padding: ".55rem 1rem",
+    fontSize: ".82rem",
+    fontFamily: "inherit",
+    outline: "none",
+    cursor: "pointer",
+    minWidth: "160px",
+    appearance: "none" as any,
+    WebkitAppearance: "none" as any,
+    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238da5ae' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "right .75rem center",
+    paddingRight: "2rem"
+  };
 
   return (
     <div className="bg-background min-h-screen">
@@ -62,7 +128,7 @@ export const CareersPage: React.FC = () => {
               </div>
               <div className="subpage-meta-item">
                 <span className="subpage-meta-value">100%</span>
-                <span className="subpage-meta-label">Remote & Hybrid</span>
+                <span className="subpage-meta-label">Remote &amp; Hybrid</span>
               </div>
               <div className="subpage-meta-item">
                 <span className="subpage-meta-value">Top 1%</span>
@@ -75,7 +141,7 @@ export const CareersPage: React.FC = () => {
 
       {/* Open Positions List */}
       <section id="open-roles" className="section-padding bg-[#050811]">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8">
           <div>
             <span className="text-[#63f5e8] font-mono text-xs tracking-widest uppercase block mb-2">OPPORTUNITIES</span>
             <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight">Open Positions</h2>
@@ -84,6 +150,82 @@ export const CareersPage: React.FC = () => {
             Find the right engineering challenge for your expertise and help shape the next decade of technology.
           </p>
         </div>
+
+        {/* Search & Filters */}
+        <div style={{ marginBottom: "2rem", display: "flex", flexWrap: "wrap", gap: "0.75rem", alignItems: "center" }}>
+          {/* Keyword Search */}
+          <div style={{ position: "relative", flex: "1 1 220px", minWidth: "220px" }}>
+            <Search size={14} color="#63f5e8" style={{ position: "absolute", left: "0.85rem", top: "50%", transform: "translateY(-50%)" }} />
+            <input
+              id="careers-search"
+              type="text"
+              placeholder="Search roles, skills, location…"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              style={{
+                width: "100%",
+                background: "#0a111c",
+                border: "1px solid rgba(99,245,232,0.2)",
+                color: "#eef4f3",
+                padding: ".55rem 1rem .55rem 2.5rem",
+                fontSize: ".82rem",
+                fontFamily: "inherit",
+                outline: "none",
+                boxSizing: "border-box"
+              }}
+            />
+          </div>
+
+          {/* Department Filter */}
+          <select
+            id="careers-filter-dept"
+            value={filterDept}
+            onChange={e => setFilterDept(e.target.value)}
+            style={selectStyle}
+          >
+            <option value="">All Departments</option>
+            {departments.map((d: string) => <option key={d} value={d}>{d}</option>)}
+          </select>
+
+          {/* Location Filter */}
+          <select
+            id="careers-filter-location"
+            value={filterLocation}
+            onChange={e => setFilterLocation(e.target.value)}
+            style={selectStyle}
+          >
+            <option value="">All Locations</option>
+            {locations.map((l: string) => <option key={l} value={l}>{l}</option>)}
+          </select>
+
+          {/* Employment Type Filter */}
+          <select
+            id="careers-filter-type"
+            value={filterType}
+            onChange={e => setFilterType(e.target.value)}
+            style={selectStyle}
+          >
+            <option value="">All Types</option>
+            {employmentTypes.map((t: string) => <option key={t} value={t}>{t}</option>)}
+          </select>
+
+          {/* Clear filters button */}
+          {hasFilters && (
+            <button
+              onClick={clearFilters}
+              style={{ display: "inline-flex", alignItems: "center", gap: ".4rem", background: "none", border: "1px solid rgba(255,80,80,0.3)", color: "#ff8080", padding: ".45rem .9rem", fontSize: ".78rem", fontFamily: "'IBM Plex Mono'", cursor: "pointer" }}
+            >
+              <X size={12} /> CLEAR
+            </button>
+          )}
+        </div>
+
+        {/* Results count */}
+        {hasFilters && (
+          <p style={{ fontFamily: "'IBM Plex Mono'", fontSize: ".68rem", letterSpacing: ".1em", color: "#5e7079", marginBottom: "1.5rem" }}>
+            {filteredJobs.length} RESULT{filteredJobs.length !== 1 ? "S" : ""} FOUND
+          </p>
+        )}
 
         {loading ? (
           <div className="min-h-[20vh] flex items-center justify-center">
@@ -94,14 +236,25 @@ export const CareersPage: React.FC = () => {
             <AlertCircle className="h-5 w-5" />
             <p>Failed to load open positions. Please try again later.</p>
           </div>
-        ) : !jobs || jobs.length === 0 ? (
+        ) : !filteredJobs || filteredJobs.length === 0 ? (
           <div className="p-12 border border-[rgba(99,245,232,0.2)] bg-[#0a111c] rounded-md text-center">
-            <p className="text-[#8da5ae]">No open positions currently available. Check back soon.</p>
+            {hasFilters ? (
+              <>
+                <p className="text-[#8da5ae] mb-3">No positions match your current filters.</p>
+                <button onClick={clearFilters} style={{ fontFamily: "'IBM Plex Mono'", fontSize: ".72rem", color: "#63f5e8", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}>
+                  Clear filters to see all openings
+                </button>
+              </>
+            ) : (
+              <p className="text-[#8da5ae]">No open positions currently available. Check back soon.</p>
+            )}
           </div>
         ) : (
           <div className="grid gap-4">
-            {jobs.map((job) => (
-              <Link key={job.job_id} href={`/careers/${job.job_id}`} className="block group">
+            {filteredJobs.map((job: any) => {
+              const jobId = job.job_id || job.id;
+              return (
+                <Link key={jobId} href={`/careers/${jobId}`} className="block group">
                 <div className="p-6 md:p-8 border border-[rgba(140,174,187,0.2)] bg-[#0a111c] rounded-lg flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-[#63f5e8] hover:bg-[#0d1624] transition-all">
                   <div>
                     <div className="flex items-center gap-3 mb-3">
@@ -119,7 +272,8 @@ export const CareersPage: React.FC = () => {
                   </div>
                 </div>
               </Link>
-            ))}
+            );
+          })}
           </div>
         )}
       </section>
@@ -128,3 +282,4 @@ export const CareersPage: React.FC = () => {
 };
 
 export default CareersPage;
+

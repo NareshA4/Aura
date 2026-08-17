@@ -19,6 +19,11 @@ import RequestQuotePage from "../features/public/pages/RequestQuote/RequestQuote
 import RfpPage from "../features/public/pages/Rfp/RfpPage";
 import EstimatorPage from "../features/public/pages/Estimator/EstimatorPage";
 import NotFoundPage from "../features/public/pages/NotFound/NotFoundPage";
+import PrivacyPolicyPage from "../features/public/pages/Legal/PrivacyPolicyPage";
+import TermsPage from "../features/public/pages/Legal/TermsPage";
+import CookiePolicyPage from "../features/public/pages/Legal/CookiePolicyPage";
+import SecurityGovernancePage from "../features/public/pages/Legal/SecurityGovernancePage";
+import WhyUsPage from "../features/public/pages/WhyUs/WhyUsPage";
 
 export const PublicRoutes: React.FC = () => {
   return (
@@ -26,6 +31,7 @@ export const PublicRoutes: React.FC = () => {
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/about" component={AboutPage} />
+        <Route path="/why-us" component={WhyUsPage} />
         
         <Route path="/services" component={ServicesPage} />
         <Route path="/services/:slug" component={ServiceDetailsPage} />
@@ -48,6 +54,12 @@ export const PublicRoutes: React.FC = () => {
         <Route path="/request-quote" component={RequestQuotePage} />
         <Route path="/rfp" component={RfpPage} />
         <Route path="/estimator" component={EstimatorPage} />
+
+        {/* Legal & Utility Pages */}
+        <Route path="/privacy-policy" component={PrivacyPolicyPage} />
+        <Route path="/terms" component={TermsPage} />
+        <Route path="/cookie-policy" component={CookiePolicyPage} />
+        <Route path="/security" component={SecurityGovernancePage} />
         
         {/* Default route inside PublicLayout for unmatched routes */}
         <Route component={NotFoundPage} />
