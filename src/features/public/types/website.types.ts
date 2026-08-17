@@ -47,18 +47,21 @@ export interface BlogPost {
 }
 
 export interface Job {
-  id: string;
+  id: number;        // numeric DB primary key
+  job_id: string;   // human-readable code e.g. AUR-001
   title: string;
   department: string;
   location: string;
-  employmentType: string;
   experience: string;
-  description: string;
-  responsibilities: string[];
-  requirements: string[];
-  skills: string[];
+  skills: string;          // stored as plain text in DB
+  responsibilities: string; // stored as plain text in DB
+  status: string;
+  created_at: string;
+  // legacy / optional fields
+  employmentType?: string;
+  description?: string;
   deadline?: string;
-  isActive: boolean;
+  isActive?: boolean;
 }
 
 export interface JobApplication {

@@ -1,5 +1,4 @@
 import React from "react";
-import { ArrowRight } from "lucide-react";
 
 const steps = [
   "DISCOVER",
@@ -13,37 +12,63 @@ const steps = [
 
 export const ApproachSection: React.FC = () => {
   return (
-    <section className="py-24 bg-[#0a0f18] border-y border-border/10 overflow-hidden">
+    <section className="py-20 bg-[#060c18] border-y border-[rgba(99,245,232,0.12)]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-white">Our Approach</h2>
-          <p className="text-gray-400 mt-4">A proven, rigorous engineering methodology.</p>
+        {/* Section Header */}
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#eef4f3] tracking-tight">
+            Our Approach
+          </h2>
+          <p className="text-[#8da5ae] text-base mt-3">
+            A proven, rigorous engineering methodology.
+          </p>
         </div>
 
         {/* Desktop Horizontal Process */}
-        <div className="hidden lg:flex items-center justify-between max-w-6xl mx-auto relative">
-          <div className="absolute left-0 right-0 top-1/2 h-[1px] bg-border/30 -translate-y-1/2" />
-          
-          {steps.map((step, index) => (
-            <div key={index} className="relative z-10 flex flex-col items-center group">
-              <div className="w-16 h-16 rounded-full bg-card border border-border/40 flex items-center justify-center mb-4 group-hover:border-primary group-hover:bg-primary/10 transition-colors shadow-[0_0_15px_rgba(0,0,0,0.5)]">
-                <span className="font-mono text-xs text-primary/70 font-bold group-hover:text-primary">{index + 1}</span>
+        <div className="hidden lg:block max-w-5xl mx-auto relative pt-2 pb-4">
+          {/* Subtle Connecting Line */}
+          <div 
+            className="absolute left-[6%] right-[6%] top-[34px] h-[1px] z-0 bg-[rgba(99,245,232,0.25)]" 
+          />
+
+          <div className="grid grid-cols-7 gap-4 relative z-10">
+            {steps.map((step, index) => (
+              <div 
+                key={index} 
+                className="flex flex-col items-center text-center group cursor-pointer"
+              >
+                {/* Refined Step Circle */}
+                <div 
+                  className="w-14 h-14 rounded-full flex items-center justify-center mb-4 transition-all duration-200 bg-[#0a1422] border border-[rgba(99,245,232,0.35)] group-hover:border-[#63f5e8] group-hover:bg-[rgba(99,245,232,0.08)] group-hover:shadow-[0_0_15px_rgba(99,245,232,0.2)]"
+                >
+                  <span className="font-['IBM_Plex_Mono',monospace] text-sm font-semibold text-[#63f5e8]">
+                    {index + 1}
+                  </span>
+                </div>
+
+                {/* Step Label */}
+                <span className="font-['IBM_Plex_Mono',monospace] text-[0.72rem] font-medium tracking-[0.14em] text-[#a2b5be] group-hover:text-[#eef4f3] transition-colors">
+                  {step}
+                </span>
               </div>
-              <span className="font-mono text-xs tracking-widest text-gray-400 group-hover:text-white transition-colors">{step}</span>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
-        {/* Mobile Vertical Process */}
-        <div className="lg:hidden flex flex-col space-y-8 max-w-sm mx-auto relative">
-          <div className="absolute top-0 bottom-0 left-8 w-[1px] bg-border/30" />
-          
+        {/* Mobile / Tablet Vertical Process */}
+        <div className="lg:hidden flex flex-col space-y-6 max-w-xs mx-auto relative pl-4">
+          <div className="absolute top-3 bottom-3 left-9 w-[1px] bg-[rgba(99,245,232,0.2)]" />
+
           {steps.map((step, index) => (
-            <div key={index} className="relative z-10 flex items-center gap-6 group">
-              <div className="w-16 h-16 rounded-full bg-card border border-border/40 flex items-center justify-center flex-shrink-0 group-hover:border-primary group-hover:bg-primary/10 transition-colors">
-                <span className="font-mono text-xs text-primary/70 font-bold group-hover:text-primary">{index + 1}</span>
+            <div key={index} className="relative z-10 flex items-center gap-5 group">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 bg-[#0a1422] border border-[rgba(99,245,232,0.35)] group-hover:border-[#63f5e8] group-hover:bg-[rgba(99,245,232,0.08)]">
+                <span className="font-['IBM_Plex_Mono',monospace] text-sm font-semibold text-[#63f5e8]">
+                  {index + 1}
+                </span>
               </div>
-              <span className="font-mono text-sm tracking-widest text-gray-300 group-hover:text-white transition-colors">{step}</span>
+              <span className="font-['IBM_Plex_Mono',monospace] text-xs tracking-wider text-[#a2b5be] group-hover:text-white">
+                {step}
+              </span>
             </div>
           ))}
         </div>
@@ -51,3 +76,5 @@ export const ApproachSection: React.FC = () => {
     </section>
   );
 };
+
+export default ApproachSection;

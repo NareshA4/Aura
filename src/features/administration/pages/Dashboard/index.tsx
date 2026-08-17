@@ -109,8 +109,8 @@ export const Dashboard: React.FC = () => {
         const t = await supportService.getAdminTickets();
         if (t && t.length > 0) {
           setSupportTicketsCount({
-            open: t.filter(ticket => ticket.status !== "RESOLVED" && ticket.status !== "CLOSED").length,
-            critical: t.filter(ticket => ticket.priority === "CRITICAL").length
+            open: t.filter(ticket => ticket.status !== "resolved" && ticket.status !== "closed").length,
+            critical: t.filter(ticket => ticket.priority === "critical").length
           });
           setOpenTickets(t.slice(0, 4));
         } else {

@@ -11,7 +11,6 @@ import SupportRoutes from "../routes/SupportRoutes";
 import CmsConsoleRoutes from "../routes/CmsConsoleRoutes";
 import ProtectedRoute from "../routes/ProtectedRoute";
 import RoleRoute from "../routes/RoleRoute";
-import NotFound from "../features/cms/pages/NotFound";
 
 export const AppRouter: React.FC = () => {
   return (
@@ -41,7 +40,14 @@ export const AppRouter: React.FC = () => {
       </Route>
 
       {/* Client Protected scopes */}
-      <Route path="/portal/:subpath*">
+      <Route path="/portal/*">
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={["CLIENT"]}>
+            <ClientRoutes />
+          </RoleRoute>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/client/:subpath*">
         <ProtectedRoute>
           <RoleRoute allowedRoles={["CLIENT"]}>
             <ClientRoutes />
@@ -57,9 +63,23 @@ export const AppRouter: React.FC = () => {
           </RoleRoute>
         </ProtectedRoute>
       </Route>
+      <Route path="/sales/:subpath*">
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={["SALES_EXECUTIVE", "ADMIN"]}>
+            <CrmRoutes />
+          </RoleRoute>
+        </ProtectedRoute>
+      </Route>
 
       {/* Recruitment HR Manager Protected scopes */}
       <Route path="/recruitment/:subpath*">
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={["HR_MANAGER", "ADMIN"]}>
+            <RecruitmentRoutes />
+          </RoleRoute>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/hr/:subpath*">
         <ProtectedRoute>
           <RoleRoute allowedRoles={["HR_MANAGER", "ADMIN"]}>
             <RecruitmentRoutes />
@@ -78,6 +98,13 @@ export const AppRouter: React.FC = () => {
 
       {/* CMS Content Manager Protected scopes */}
       <Route path="/cms/:subpath*">
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={["CONTENT_MANAGER", "ADMIN"]}>
+            <CmsConsoleRoutes />
+          </RoleRoute>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/content/:subpath*">
         <ProtectedRoute>
           <RoleRoute allowedRoles={["CONTENT_MANAGER", "ADMIN"]}>
             <CmsConsoleRoutes />

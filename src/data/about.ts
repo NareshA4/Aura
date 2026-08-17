@@ -121,22 +121,25 @@ export const aboutData = {
     title: "Executive Leadership",
     items: [
       {
-        name: "[Executive Name]",
-        designation: "[Chief Executive Officer]",
-        bio: "[Short biography detailing enterprise technology experience and strategic vision.]",
-        linkedin: "#"
+        name: "David Vance",
+        designation: "Chief Executive Officer",
+        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=85",
+        bio: "Over 20 years leading global technology consulting firms, spearheading multi-billion-dollar enterprise digital transformations across North America and Europe.",
+        linkedin: "https://linkedin.com"
       },
       {
-        name: "[Executive Name]",
-        designation: "[Chief Technology Officer]",
-        bio: "[Short biography detailing engineering excellence, architecture, and technology leadership.]",
-        linkedin: "#"
+        name: "Dr. Elena Rostova",
+        designation: "Chief Technology Officer",
+        image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=85",
+        bio: "Former Principal Architect at Tier-1 cloud platforms. Specializes in distributed systems, zero-trust security infrastructure, and large-scale enterprise AI engineering.",
+        linkedin: "https://linkedin.com"
       },
       {
-        name: "[Executive Name]",
-        designation: "[Chief Operating Officer]",
-        bio: "[Short biography detailing global delivery operations and scaling enterprise teams.]",
-        linkedin: "#"
+        name: "Marcus Chen",
+        designation: "Chief Operating Officer",
+        image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=85",
+        bio: "Leads Aurexion's global delivery centers and engineering operations, managing 24/7 follow-the-sun client delivery with strict SLA governance.",
+        linkedin: "https://linkedin.com"
       }
     ]
   },

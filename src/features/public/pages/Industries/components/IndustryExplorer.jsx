@@ -16,7 +16,7 @@ export const IndustryExplorer = () => {
   }, []);
 
   return (
-    <section className="py-24 bg-[#0a0f18] border-t border-border/10 hidden md:block">
+    <section id="industries-explorer" className="py-24 bg-[#0a0f18] border-t border-border/10 hidden md:block scroll-mt-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row gap-12">
           
@@ -55,7 +55,7 @@ export const IndustryExplorer = () => {
               <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[60px] pointer-events-none" />
               
               <div className="relative z-10 flex flex-col h-full">
-                <span className="text-6xl font-bold text-primary/10 absolute top-4 right-8 font-mono">{activeIndustry.id}</span>
+                <span className="text-6xl font-bold text-[#63f5e8] opacity-75 drop-shadow-[0_0_12px_rgba(99,245,232,0.6)] absolute top-4 right-8 font-mono">{activeIndustry.id}</span>
                 
                 <h3 className="text-3xl md:text-5xl font-bold text-white mb-6 pr-16">
                   {activeIndustry.name}

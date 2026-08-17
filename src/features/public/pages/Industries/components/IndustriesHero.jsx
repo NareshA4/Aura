@@ -1,43 +1,75 @@
 import React from "react";
 import { Link } from "wouter";
+import { ArrowUpRight } from "lucide-react";
 
 export const IndustriesHero = () => {
   return (
-    <section className="relative min-h-[60vh] flex items-center bg-[#050B14] overflow-hidden pt-24 pb-16">
-      {/* Background Gradients */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-full md:w-1/2 h-full bg-gradient-to-l from-primary/10 to-transparent mix-blend-screen" />
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-cyan-500/10 blur-[120px]" />
-      </div>
+    <section className="subpage-immersive-hero">
+      {/* High-Resolution Brightened Background Artwork */}
+      <div
+        className="subpage-hero-art"
+        style={{
+          backgroundImage: `url(https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=85)`,
+        }}
+      />
+      <div className="subpage-hero-overlay" />
+      <div className="subpage-hero-grid" />
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-        <div className="max-w-4xl mx-auto">
-          <div className="inline-flex items-center justify-center gap-2 mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <div className="w-8 h-[1px] bg-primary" />
-            <span className="text-primary font-mono text-sm tracking-[0.2em] uppercase">
-              INDUSTRIES
-            </span>
-            <div className="w-8 h-[1px] bg-primary" />
+      {/* Main Content */}
+      <div className="subpage-hero-container">
+        <div style={{ maxWidth: "880px" }}>
+          <div className="subpage-hero-eyebrow">
+            <span className="subpage-cat-tag">SECTOR INTELLIGENCE / 02</span>
+            <span className="subpage-signal-divider" />
+            <span className="subpage-code-tag">18 VERTICALS</span>
           </div>
-          
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter leading-[1.1] mb-8 text-white animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
-            Technology Solutions Engineered for <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">Every Industry</span>
+
+          <h1 className="subpage-hero-title">
+            Technology Solutions Engineered for <em>Every Industry</em>
           </h1>
-          
-          <p className="text-xl md:text-2xl text-gray-400 leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200 mb-10">
-            Aurexion delivers enterprise software, digital transformation, AI/ML, cloud modernization, and technology solutions across multiple industry verticals.
+
+          <p className="subpage-hero-desc">
+            Aurexion delivers bespoke enterprise software, digital transformation, AI/ML pipelines, cloud modernization, and compliance-first architectures across 18 specialized global industry verticals.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
-            <Link href="#network" className="inline-flex h-12 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 shadow-[0_0_20px_rgba(var(--primary),0.3)]">
-              Explore Industries
+          {/* Sector Highlights */}
+          <div className="subpage-tech-row">
+            {["Banking & FinTech", "Healthcare & Life Sciences", "Manufacturing & Robotics", "Logistics & Supply Chain", "Government", "Telecom"].map((item) => (
+              <span key={item} className="subpage-tech-chip">
+                {item}
+              </span>
+            ))}
+          </div>
+
+          {/* Action CTAs */}
+          <div className="subpage-hero-ctas">
+            <a href="#industries-explorer" className="signal-button">
+              EXPLORE INDUSTRIES <ArrowUpRight size={15} />
+            </a>
+            <Link href="/contact" className="outline-button">
+              DISCUSS SECTOR CHALLENGE
             </Link>
-            <Link href="/contact" className="inline-flex h-12 items-center justify-center rounded-md border border-border bg-card/20 backdrop-blur-sm px-8 text-sm font-medium text-white transition-all hover:bg-white hover:text-black">
-              Talk to Our Experts
-            </Link>
+          </div>
+
+          {/* Telemetry Metrics */}
+          <div className="subpage-meta-telemetry">
+            <div className="subpage-meta-item">
+              <span className="subpage-meta-value">18</span>
+              <span className="subpage-meta-label">Industry Verticals</span>
+            </div>
+            <div className="subpage-meta-item">
+              <span className="subpage-meta-value">100%</span>
+              <span className="subpage-meta-label">Compliance Mapped</span>
+            </div>
+            <div className="subpage-meta-item">
+              <span className="subpage-meta-value">Tier-1</span>
+              <span className="subpage-meta-label">Enterprise Grade</span>
+            </div>
           </div>
         </div>
       </div>
     </section>
   );
 };
+
+export default IndustriesHero;

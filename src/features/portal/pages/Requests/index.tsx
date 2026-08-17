@@ -1,19 +1,21 @@
 import React from "react";
-import Card from "../../../../components/ui/card";
+import PageHeader from "../../components/PageHeader";
+import ModuleUnavailable from "../../components/ModuleUnavailable";
 
 export const Requests: React.FC = () => {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
-      <div>
-        <p className="eyebrow">TICKET WORKFLOW</p>
-        <h1 style={{ fontSize: "2rem", margin: "0.5rem 0 0 0" }}>Requests Queue</h1>
-      </div>
-      <Card>
-        <p style={{ color: "#94a3b8" }}>Submit work order requests or resource provisions directly to the engineering team.</p>
-      </Card>
+      <PageHeader
+        eyebrow="REQUEST WORKFLOW"
+        title="Requests"
+        description="Work order and resource provisioning requests for your client account."
+      />
+      <ModuleUnavailable
+        module="Requests"
+        description="The Aurexion API does not currently expose a client requests endpoint. No placeholder or mock requests are shown. Requests will appear here automatically once the backend capability is available. For general assistance, please use the Support module."
+      />
     </div>
   );
 };
 
 export default Requests;
-

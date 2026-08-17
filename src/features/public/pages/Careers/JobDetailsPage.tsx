@@ -41,7 +41,7 @@ export const JobDetailsPage: React.FC = () => {
             <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
               <span className="flex items-center font-mono text-primary"><Briefcase className="mr-2 h-4 w-4" /> {job.department}</span>
               <span className="flex items-center"><MapPin className="mr-2 h-4 w-4" /> {job.location}</span>
-              <span className="flex items-center"><Clock className="mr-2 h-4 w-4" /> {job.employmentType}</span>
+              {job.employmentType && <span className="flex items-center"><Clock className="mr-2 h-4 w-4" /> {job.employmentType}</span>}
               {job.experience && <span className="flex items-center border border-border/60 px-2 py-0.5 rounded">{job.experience}</span>}
             </div>
           </div>
@@ -58,43 +58,23 @@ export const JobDetailsPage: React.FC = () => {
               </div>
             </section>
 
-            {job.responsibilities && job.responsibilities.length > 0 && (
+            {job.responsibilities && (
               <section className="mb-12">
                 <h2 className="text-2xl font-bold mb-6">What You'll Do</h2>
-                <ul className="space-y-3">
-                  {job.responsibilities.map((resp, idx) => (
-                    <li key={idx} className="flex gap-3">
-                      <div className="mt-2 w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
-                      <span className="text-muted-foreground leading-relaxed">{resp}</span>
-                    </li>
-                  ))}
-                </ul>
+                <div className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                  {job.responsibilities}
+                </div>
               </section>
             )}
 
-            {job.requirements && job.requirements.length > 0 && (
-              <section className="mb-12">
-                <h2 className="text-2xl font-bold mb-6">What You Need</h2>
-                <ul className="space-y-3">
-                  {job.requirements.map((req, idx) => (
-                    <li key={idx} className="flex gap-3">
-                      <div className="mt-2 w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
-                      <span className="text-muted-foreground leading-relaxed">{req}</span>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            )}
 
-            {job.skills && job.skills.length > 0 && (
+
+
+            {job.skills && (
               <section className="mb-12">
                 <h2 className="text-2xl font-bold mb-6">Skills</h2>
-                <div className="flex flex-wrap gap-2">
-                  {job.skills.map((skill, idx) => (
-                    <span key={idx} className="px-3 py-1 bg-muted border border-border/40 text-muted-foreground rounded text-sm">
-                      {skill}
-                    </span>
-                  ))}
+                <div className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                  {job.skills}
                 </div>
               </section>
             )}
@@ -106,7 +86,7 @@ export const JobDetailsPage: React.FC = () => {
               <p className="text-sm text-muted-foreground mb-6">
                 Join our team and help us build what comes next.
               </p>
-              <Link href={`/careers/${job.id}/apply`} className="flex w-full h-11 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors mb-3">
+              <Link href={`/careers/${job.job_id}/apply`} className="flex w-full h-11 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors mb-3">
                 Apply Now
               </Link>
             </div>

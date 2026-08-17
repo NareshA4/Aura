@@ -1,37 +1,85 @@
 import React from "react";
 import { aboutData } from "../../../../../data/about";
+import { ShieldCheck, KeyRound, FileSearch, Eye, Award } from "lucide-react";
+
+const GOVERNANCE_DETAILS: Record<string, { icon: React.ElementType; desc: string }> = {
+  "Security Governance": {
+    icon: ShieldCheck,
+    desc: "Rigorous alignment with ISO 27001, SOC 2 Type II, and enterprise cybersecurity policies.",
+  },
+  "Access Control": {
+    icon: KeyRound,
+    desc: "Least-privilege role-based access management across all development environments.",
+  },
+  "Auditability": {
+    icon: FileSearch,
+    desc: "Immutable change logs, commit traceability, and automated compliance verification.",
+  },
+  "Transparency": {
+    icon: Eye,
+    desc: "Open sprint telemetry, burndown metrics, and real-time status dashboards for clients.",
+  },
+  "Enterprise Standards": {
+    icon: Award,
+    desc: "Architectural review boards ensuring strict adherence to code quality and SLAs.",
+  },
+};
 
 export const GovernanceSection: React.FC = () => {
   return (
-    <section className="py-24 bg-[#050B14] border-y border-border/10">
+    <section className="py-20 bg-[#060c16] border-t border-border/10">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-4xl font-bold text-white mb-6">{aboutData.governance.title}</h2>
-          <p className="text-gray-400">
-            Aurexion is committed to accountable, secure, and transparent operations adhering strictly to enterprise-grade standards.
+        <div className="max-w-3xl mb-12">
+          <div className="inline-flex items-center gap-2 mb-3">
+            <div className="w-6 h-[1px] bg-[#63f5e8]" />
+            <span className="font-mono text-xs font-semibold tracking-[0.16em] uppercase text-[#63f5e8]">
+              COMPLIANCE & INTEGRITY
+            </span>
+          </div>
+          <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight mb-4">
+            {aboutData.governance.title}
+          </h2>
+          <p className="text-base md:text-lg text-gray-400 leading-relaxed">
+            Aurexion operates under strict institutional standards, ensuring every software release adheres to global compliance, auditability, and zero-trust security.
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8">
-          <div className="p-6 border border-primary bg-primary/10 rounded-sm font-mono text-primary font-bold">
-            GOVERNANCE
-          </div>
-          
-          <div className="hidden md:block w-16 h-[1px] bg-primary/50" />
-          <div className="md:hidden h-16 w-[1px] bg-primary/50" />
-          
-          <div className="flex flex-col gap-4">
-            {aboutData.governance.nodes.map((node: string, index: number) => (
-              <div key={index} className="flex items-center gap-4">
-                <div className="w-8 h-[1px] bg-border/40" />
-                <div className="p-4 border border-border/20 bg-card/10 rounded-sm text-sm text-gray-300 w-48 hover:border-primary/40 transition-colors">
-                  {node}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-5">
+          {aboutData.governance.nodes.map((node: string, index: number) => {
+            const detail = GOVERNANCE_DETAILS[node] || {
+              icon: ShieldCheck,
+              desc: "Adhering to strict enterprise governance standards.",
+            };
+            const Icon = detail.icon;
+
+            return (
+              <div
+                key={index}
+                className="p-6 bg-[#0b1420] border border-[#1b2b3d] rounded-xl hover:border-[#63f5e8]/40 hover:bg-[#0e1a2b] transition-all duration-200 flex flex-col justify-between"
+              >
+                <div>
+                  <div className="w-10 h-10 rounded-lg bg-[#63f5e8]/10 border border-[#63f5e8]/20 flex items-center justify-center mb-5">
+                    <Icon className="w-5 h-5 text-[#63f5e8]" />
+                  </div>
+                  <h3 className="text-base font-bold text-white mb-2">
+                    {node}
+                  </h3>
+                  <p className="text-xs text-gray-400 leading-relaxed">
+                    {detail.desc}
+                  </p>
+                </div>
+
+                <div className="pt-4 mt-4 border-t border-[#1b2b3d] flex items-center justify-between text-[11px] font-mono text-gray-500">
+                  <span>PILLAR 0{index + 1}</span>
+                  <span className="text-[#63f5e8]">VERIFIED</span>
                 </div>
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 };
+
+export default GovernanceSection;

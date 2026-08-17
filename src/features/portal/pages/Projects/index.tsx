@@ -1,20 +1,21 @@
 import React from "react";
-import Card from "../../../../components/ui/card";
+import PageHeader from "../../components/PageHeader";
+import ModuleUnavailable from "../../components/ModuleUnavailable";
 
 export const Projects: React.FC = () => {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
-      <div>
-        <p className="eyebrow">WORK SCOPE</p>
-        <h1 style={{ fontSize: "2rem", margin: "0.5rem 0 0 0" }}>Project Deliverables</h1>
-      </div>
-      <Card>
-        <h3 style={{ color: "#63f5e8" }}>Project Overview</h3>
-        <p style={{ color: "#94a3b8" }}>Enterprise Database Overhaul project is 80% complete.</p>
-      </Card>
+      <PageHeader
+        eyebrow="WORK SCOPE"
+        title="Projects"
+        description="Project portfolio overview for your client account."
+      />
+      <ModuleUnavailable
+        module="Projects"
+        description="The Aurexion API does not currently expose a projects endpoint for client users. No placeholder or mock projects are shown. Projects will appear here automatically once the backend capability is available."
+      />
     </div>
   );
 };
 
 export default Projects;
-

@@ -1,178 +1,248 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Card, { CardContent, CardHeader, CardTitle } from "../../../../components/ui/card";
 import Button from "../../../../components/ui/button";
-import { MessageSquareCode, UserPlus, Clock, CheckCircle, ShieldAlert } from "lucide-react";
-import supportService, { SupportTicketList } from "../../../support/services/supportService";
+import { MessageSquareCode, Clock, CheckCircle, ShieldAlert, UserCheck, RefreshCw } from "lucide-react";
+import { ErrorState, LoadingState, EmptyState } from "../../../portal/components/StateViews";
+import { TicketCategoryBadge, TicketPriorityBadge, TicketStatusBadge } from "../../../portal/components/TicketMeta";
+import { formatDateTime } from "../../../portal/utils/format";
+import type { TicketStatus, TicketPriority } from "../../../portal/types/portal.types";
+import useAdminTickets from "../../../support/hooks/useAdminTickets";
+import useUpdateAdminTicket from "../../../support/hooks/useUpdateAdminTicket";
+import useAssignableUsers from "../../../support/hooks/useAssignableUsers";
 
 export const Support: React.FC = () => {
-  const [tickets, setTickets] = useState<SupportTicketList[]>([]);
-  const [loading, setLoading] = useState(true);
+  const adminTickets = useAdminTickets();
+  const updateAdminTicket = useUpdateAdminTicket();
+  const assignableUsers = useAssignableUsers();
 
-  useEffect(() => {
-    const fetchTickets = async () => {
-      setLoading(true);
-      try {
-        const data = await supportService.getAdminTickets();
-        if (data && data.length > 0) {
-          setTickets(data);
-        } else {
-          throw new Error("Empty ticket array");
-        }
-      } catch (err) {
-        // Fallback
-        setTickets([
-          { id: 1, ticket_id: "tck_1", subject: "API Endpoint latency increases in Asia-Pacific", category: "Network", priority: "HIGH", status: "OPEN", client_username: "venkat@aurexion.io", assigned_username: null, created_at: "Aug 14", updated_at: "Aug 14" },
-          { id: 2, ticket_id: "tck_2", subject: "Estimator spreadsheet upload failure", category: "App-Estimator", priority: "CRITICAL", status: "ASSIGNED", client_username: "sarah@aurexion.io", assigned_username: "Support Executive A", created_at: "Aug 13", updated_at: "Aug 15" },
-          { id: 3, ticket_id: "tck_3", subject: "Verify email SMTP connection issues", category: "System", priority: "LOW", status: "RESOLVED", client_username: "system@aurexion.io", assigned_username: "Support Executive B", created_at: "Aug 12", updated_at: "Aug 14" },
-        ]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchTickets();
-  }, []);
+  const [savingId, setSavingId] = useState<number | null>(null);
 
-  const handleAssignTicket = (id: number) => {
-    const exec = prompt("Enter Support Executive Name to assign this ticket to:");
-    if (exec) {
-      setTickets(tickets.map(t => t.id === id ? { ...t, assigned_username: exec, status: "ASSIGNED" } : t));
+  const handleStatusChange = async (id: number, nextStatus: TicketStatus) => {
+    setSavingId(id);
+    try {
+      await updateAdminTicket.update(id, { status: nextStatus });
+      adminTickets.refetch();
+    } catch {
+      // Error in updateAdminTicket.error
+    } finally {
+      setSavingId(null);
     }
   };
 
-  const handleStatusChange = (id: number, nextStatus: string) => {
-    setTickets(tickets.map(t => t.id === id ? { ...t, status: nextStatus } : t));
+  const handleAssigneeChange = async (id: number, userIdStr: string) => {
+    setSavingId(id);
+    const assigned_to = userIdStr === "unassigned" ? null : Number(userIdStr);
+    const nextStatus: TicketStatus = assigned_to ? "assigned" : "open";
+    try {
+      await updateAdminTicket.update(id, { assigned_to, status: nextStatus });
+      adminTickets.refetch();
+    } catch {
+      // Handled
+    } finally {
+      setSavingId(null);
+    }
   };
 
-  // Compute Metrics
-  const openCount = tickets.filter(t => ["OPEN", "ASSIGNED"].includes(t.status.toUpperCase())).length;
-  const criticalCount = tickets.filter(t => t.priority.toUpperCase() === "CRITICAL").length;
-  const resolvedCount = tickets.filter(t => t.status.toUpperCase() === "RESOLVED").length;
+  const handlePriorityChange = async (id: number, nextPriority: TicketPriority) => {
+    setSavingId(id);
+    try {
+      await updateAdminTicket.update(id, { priority: nextPriority });
+      adminTickets.refetch();
+    } catch {
+      // Handled
+    } finally {
+      setSavingId(null);
+    }
+  };
+
+  // Compute Metrics from real backend data
+  const tickets = adminTickets.data || [];
+  const openCount = tickets.filter(t => ["open", "assigned"].includes(t.status)).length;
+  const criticalCount = tickets.filter(t => t.priority === "critical").length;
+  const resolvedCount = tickets.filter(t => ["resolved", "closed"].includes(t.status)).length;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
       {/* Title */}
-      <div>
-        <p className="eyebrow"><MessageSquareCode size={12} /> CLIENT HELPDESK</p>
-        <h1 style={{ fontSize: "2rem", margin: "0.5rem 0 0 0", fontFamily: "var(--font-display)", fontWeight: 600 }}>Support Center</h1>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "1rem" }}>
+        <div>
+          <p className="eyebrow" style={{ color: "#63f5e8", display: "flex", alignItems: "center", gap: "0.4rem" }}>
+            <MessageSquareCode size={14} /> ENTERPRISE HELPDESK
+          </p>
+          <h1 style={{ fontSize: "2rem", margin: "0.5rem 0 0 0", fontFamily: "var(--font-display)", fontWeight: 600 }}>
+            Support Management Console
+          </h1>
+          <p style={{ color: "#94a3b8", fontSize: "0.9rem", margin: "0.25rem 0 0 0" }}>
+            Global ticket administration, executive assignments, and SLA oversight across all client accounts.
+          </p>
+        </div>
+        <Button variant="outline" size="sm" onClick={() => adminTickets.refetch()}>
+          <RefreshCw size={14} /> Refresh Data
+        </Button>
       </div>
 
-      {/* KPI Cards */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1.5rem" }} className="grid-responsive">
-        <Card>
-          <CardContent style={{ padding: "1.25rem", display: "flex", alignItems: "center", gap: "1rem" }}>
-            <Clock size={24} style={{ color: "var(--color-cyan)" }} />
-            <div>
-              <div style={{ fontSize: "0.75rem", fontFamily: "var(--font-mono)", color: "var(--color-text-muted)" }}>OPEN / ACTIVE TICKETS</div>
-              <div style={{ fontSize: "1.8rem", fontWeight: 600, fontFamily: "var(--font-display)" }}>{openCount}</div>
-            </div>
-          </CardContent>
-        </Card>
+      {adminTickets.isLoading ? (
+        <LoadingState rows={4} label="Loading helpdesk tickets..." />
+      ) : adminTickets.isError ? (
+        <ErrorState error={adminTickets.error} onRetry={adminTickets.refetch} title="Unable to load administrative support tickets" />
+      ) : (
+        <>
+          {/* KPI Cards */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1.5rem" }}>
+            <Card glowOnHover>
+              <CardContent style={{ padding: "1.25rem", display: "flex", alignItems: "center", gap: "1rem" }}>
+                <Clock size={28} style={{ color: "#63f5e8" }} />
+                <div>
+                  <div style={{ fontSize: "0.75rem", fontFamily: "IBM Plex Mono, monospace", color: "#94a3b8" }}>ACTIVE TICKETS</div>
+                  <div style={{ fontSize: "1.8rem", fontWeight: 600, fontFamily: "var(--font-display)", color: "#63f5e8" }}>{openCount}</div>
+                </div>
+              </CardContent>
+            </Card>
 
-        <Card>
-          <CardContent style={{ padding: "1.25rem", display: "flex", alignItems: "center", gap: "1rem" }}>
-            <ShieldAlert size={24} style={{ color: "#ef4444" }} />
-            <div>
-              <div style={{ fontSize: "0.75rem", fontFamily: "var(--font-mono)", color: "var(--color-text-muted)" }}>CRITICAL PRIORITIES</div>
-              <div style={{ fontSize: "1.8rem", fontWeight: 600, fontFamily: "var(--font-display)", color: "#ef4444" }}>{criticalCount}</div>
-            </div>
-          </CardContent>
-        </Card>
+            <Card glowOnHover>
+              <CardContent style={{ padding: "1.25rem", display: "flex", alignItems: "center", gap: "1rem" }}>
+                <ShieldAlert size={28} style={{ color: "#ef4444" }} />
+                <div>
+                  <div style={{ fontSize: "0.75rem", fontFamily: "IBM Plex Mono, monospace", color: "#94a3b8" }}>CRITICAL PRIORITIES</div>
+                  <div style={{ fontSize: "1.8rem", fontWeight: 600, fontFamily: "var(--font-display)", color: "#ef4444" }}>{criticalCount}</div>
+                </div>
+              </CardContent>
+            </Card>
 
-        <Card>
-          <CardContent style={{ padding: "1.25rem", display: "flex", alignItems: "center", gap: "1rem" }}>
-            <CheckCircle size={24} style={{ color: "#10b981" }} />
-            <div>
-              <div style={{ fontSize: "0.75rem", fontFamily: "var(--font-mono)", color: "var(--color-text-muted)" }}>RESOLVED ISSUES</div>
-              <div style={{ fontSize: "1.8rem", fontWeight: 600, fontFamily: "var(--font-display)", color: "#10b981" }}>{resolvedCount}</div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Tickets List */}
-      <Card>
-        <CardHeader>
-          <CardTitle style={{ fontSize: "1.1rem" }}>Support Tickets Ledger</CardTitle>
-        </CardHeader>
-        {loading ? (
-          <div style={{ padding: "3rem", textAlign: "center", color: "var(--color-cyan)", fontFamily: "var(--font-mono)" }}>
-            RESOLVING SUPPORT DATA NODE...
+            <Card glowOnHover>
+              <CardContent style={{ padding: "1.25rem", display: "flex", alignItems: "center", gap: "1rem" }}>
+                <CheckCircle size={28} style={{ color: "#4ade80" }} />
+                <div>
+                  <div style={{ fontSize: "0.75rem", fontFamily: "IBM Plex Mono, monospace", color: "#94a3b8" }}>RESOLVED & CLOSED</div>
+                  <div style={{ fontSize: "1.8rem", fontWeight: 600, fontFamily: "var(--font-display)", color: "#4ade80" }}>{resolvedCount}</div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
-        ) : (
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "0.9rem" }}>
-              <thead>
-                <tr style={{ borderBottom: "1px solid var(--color-border)", color: "var(--color-text-muted)" }}>
-                  <th style={{ padding: "1rem", fontFamily: "var(--font-mono)", fontSize: "0.75rem" }}>TICKET ID</th>
-                  <th style={{ padding: "1rem", fontFamily: "var(--font-mono)", fontSize: "0.75rem", width: "35%" }}>INQUIRY SUBJECT</th>
-                  <th style={{ padding: "1rem", fontFamily: "var(--font-mono)", fontSize: "0.75rem" }}>CATEGORY</th>
-                  <th style={{ padding: "1rem", fontFamily: "var(--font-mono)", fontSize: "0.75rem" }}>PRIORITY</th>
-                  <th style={{ padding: "1rem", fontFamily: "var(--font-mono)", fontSize: "0.75rem" }}>TRANSMITTER</th>
-                  <th style={{ padding: "1rem", fontFamily: "var(--font-mono)", fontSize: "0.75rem" }}>ASSIGNED EXEC</th>
-                  <th style={{ padding: "1rem", fontFamily: "var(--font-mono)", fontSize: "0.75rem" }}>STATUS</th>
-                  <th style={{ padding: "1rem", fontFamily: "var(--font-mono)", fontSize: "0.75rem", textAlign: "right" }}>ACTIONS</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tickets.map((t) => (
-                  <tr key={t.id} style={{ borderBottom: "1px solid var(--color-border)" }} className="hover:bg-muted/10">
-                    <td style={{ padding: "1rem", fontFamily: "var(--font-mono)", color: "var(--color-cyan)" }}>{(t.ticket_id || String(t.id)).toUpperCase()}</td>
-                    <td style={{ padding: "1rem", fontWeight: 600, color: "var(--color-text-primary)" }}>{t.subject}</td>
-                    <td style={{ padding: "1rem", color: "var(--color-text-secondary)" }}>{t.category}</td>
-                    <td style={{ padding: "1rem" }}>
-                      <span style={{
-                        fontSize: "0.75rem",
-                        fontFamily: "var(--font-mono)",
-                        color: t.priority === "CRITICAL" ? "#ef4444" : t.priority === "HIGH" ? "#f97316" : "#63f5e8",
-                      }}>{t.priority}</span>
-                    </td>
-                    <td style={{ padding: "1rem", color: "var(--color-text-secondary)" }}>{t.client_username}</td>
-                    <td style={{ padding: "1rem", color: "var(--color-text-primary)" }}>
-                      {t.assigned_username || <span style={{ color: "var(--color-text-muted)", fontStyle: "italic" }}>Unassigned</span>}
-                    </td>
-                    <td style={{ padding: "1rem" }}>
-                      <span style={{
-                        fontSize: "0.7rem",
-                        fontFamily: "var(--font-mono)",
-                        color: t.status === "RESOLVED" ? "#10b981" : t.status === "CLOSED" ? "#ef4444" : "var(--color-cyan)",
-                        backgroundColor: "rgba(0, 0, 0, 0.15)",
-                        padding: "0.15rem 0.4rem",
-                        borderRadius: "3px",
-                        border: "1px solid rgba(255,255,255,0.05)"
-                      }}>{t.status}</span>
-                    </td>
-                    <td style={{ padding: "1rem", textAlign: "right" }}>
-                      <div style={{ display: "inline-flex", gap: "0.4rem", alignItems: "center" }}>
-                        <Button variant="outline" size="sm" onClick={() => handleAssignTicket(t.id)} style={{ display: "inline-flex", alignItems: "center", gap: "0.25rem", borderColor: "var(--color-border)" }}>
-                          <UserPlus size={12} /> Assign
-                        </Button>
-                        <select
-                          value={t.status}
-                          onChange={(e) => handleStatusChange(t.id, e.target.value)}
-                          style={{
-                            backgroundColor: "var(--color-bg-secondary)",
-                            border: "1px solid var(--color-border)",
-                            color: "var(--color-text-primary)",
-                            padding: "0.25rem 0.4rem",
-                            borderRadius: "4px",
-                            outline: "none",
-                            fontSize: "0.75rem"
-                          }}
-                        >
-                          <option value="OPEN">Open</option>
-                          <option value="ASSIGNED">Assigned</option>
-                          <option value="RESOLVED">Resolved</option>
-                          <option value="CLOSED">Closed</option>
-                        </select>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </Card>
+
+          {/* Tickets List */}
+          <Card glowOnHover>
+            <CardHeader>
+              <CardTitle style={{ fontSize: "1.1rem", color: "#63f5e8" }}>Enterprise Support Ledger</CardTitle>
+            </CardHeader>
+            {tickets.length === 0 ? (
+              <EmptyState
+                title="No support tickets"
+                description="There are currently no support tickets logged in the system."
+              />
+            ) : (
+              <div style={{ overflowX: "auto" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "0.875rem", minWidth: "900px" }}>
+                  <thead>
+                    <tr style={{ borderBottom: "1px solid #1e293b", color: "#64748b", fontFamily: "IBM Plex Mono, monospace", fontSize: "0.7rem", letterSpacing: "0.08em" }}>
+                      <th style={{ padding: "1rem" }}>TICKET ID</th>
+                      <th style={{ padding: "1rem", width: "25%" }}>SUBJECT</th>
+                      <th style={{ padding: "1rem" }}>CLIENT</th>
+                      <th style={{ padding: "1rem" }}>CATEGORY</th>
+                      <th style={{ padding: "1rem" }}>PRIORITY</th>
+                      <th style={{ padding: "1rem" }}>ASSIGNED EXEC</th>
+                      <th style={{ padding: "1rem" }}>STATUS</th>
+                      <th style={{ padding: "1rem", textAlign: "right" }}>ADMIN ACTIONS</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tickets.map((t) => (
+                      <tr key={t.id} style={{ borderBottom: "1px solid rgba(140,174,187,0.12)" }}>
+                        <td style={{ padding: "1rem", fontFamily: "IBM Plex Mono, monospace", color: "#63f5e8" }}>
+                          {t.ticket_id}
+                        </td>
+                        <td style={{ padding: "1rem", fontWeight: 600, color: "#f8fafc" }}>
+                          {t.subject}
+                        </td>
+                        <td style={{ padding: "1rem", color: "#cbd5e1" }}>{t.client_username}</td>
+                        <td style={{ padding: "1rem" }}>
+                          <TicketCategoryBadge category={t.category} />
+                        </td>
+                        <td style={{ padding: "1rem" }}>
+                          <select
+                            value={t.priority}
+                            onChange={(e) => handlePriorityChange(t.id, e.target.value as TicketPriority)}
+                            disabled={savingId === t.id}
+                            style={{
+                              backgroundColor: "#0c1222",
+                              border: "1px solid #1e293b",
+                              color: t.priority === "critical" ? "#ef4444" : t.priority === "high" ? "#fbbf24" : "#94a3b8",
+                              fontSize: "0.75rem",
+                              fontFamily: "IBM Plex Mono, monospace",
+                              padding: "0.25rem 0.4rem",
+                              borderRadius: "4px",
+                              outline: "none",
+                              cursor: "pointer",
+                            }}
+                          >
+                            <option value="low">LOW</option>
+                            <option value="medium">MEDIUM</option>
+                            <option value="high">HIGH</option>
+                            <option value="critical">CRITICAL</option>
+                          </select>
+                        </td>
+                        <td style={{ padding: "1rem" }}>
+                          <select
+                            value={t.assigned_username ? (assignableUsers.data?.find(u => u.username === t.assigned_username)?.id || "assigned") : "unassigned"}
+                            onChange={(e) => handleAssigneeChange(t.id, e.target.value)}
+                            disabled={savingId === t.id}
+                            style={{
+                              backgroundColor: "#0c1222",
+                              border: "1px solid #1e293b",
+                              color: "#cbd5e1",
+                              fontSize: "0.75rem",
+                              padding: "0.25rem 0.4rem",
+                              borderRadius: "4px",
+                              outline: "none",
+                              maxWidth: "160px",
+                              cursor: "pointer",
+                            }}
+                          >
+                            <option value="unassigned">Unassigned</option>
+                            {assignableUsers.data?.map((u) => (
+                              <option key={u.id} value={String(u.id)}>
+                                {u.first_name || u.last_name ? `${u.first_name} ${u.last_name}` : u.username}
+                              </option>
+                            ))}
+                          </select>
+                        </td>
+                        <td style={{ padding: "1rem" }}>
+                          <TicketStatusBadge status={t.status} />
+                        </td>
+                        <td style={{ padding: "1rem", textAlign: "right" }}>
+                          <select
+                            value={t.status}
+                            onChange={(e) => handleStatusChange(t.id, e.target.value as TicketStatus)}
+                            disabled={savingId === t.id}
+                            style={{
+                              backgroundColor: "#0c1222",
+                              border: "1px solid #1e293b",
+                              color: "#63f5e8",
+                              fontSize: "0.75rem",
+                              fontFamily: "IBM Plex Mono, monospace",
+                              padding: "0.25rem 0.4rem",
+                              borderRadius: "4px",
+                              outline: "none",
+                              cursor: "pointer",
+                            }}
+                          >
+                            <option value="open">Open</option>
+                            <option value="assigned">Assigned</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="awaiting_client">Awaiting Client</option>
+                            <option value="resolved">Resolved</option>
+                            <option value="closed">Closed</option>
+                          </select>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </Card>
+        </>
+      )}
     </div>
   );
 };

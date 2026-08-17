@@ -1,19 +1,21 @@
 import React from "react";
-import Card from "../../../../components/ui/card";
+import PageHeader from "../../components/PageHeader";
+import ModuleUnavailable from "../../components/ModuleUnavailable";
 
 export const Documents: React.FC = () => {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
-      <div>
-        <p className="eyebrow">VAULT INTERACTION</p>
-        <h1 style={{ fontSize: "2rem", margin: "0.5rem 0 0 0" }}>Documents Repository</h1>
-      </div>
-      <Card>
-        <p style={{ color: "#94a3b8" }}>Secure storage path for blueprints, invoices, contracts and specifications files.</p>
-      </Card>
+      <PageHeader
+        eyebrow="VAULT INTERACTION"
+        title="Documents"
+        description="Secure document repository for your client account."
+      />
+      <ModuleUnavailable
+        module="Documents"
+        description="The Aurexion API does not currently expose a documents endpoint for client users. No placeholder or mock documents are shown. Documents will appear here automatically once the backend capability is available."
+      />
     </div>
   );
 };
 
 export default Documents;
-

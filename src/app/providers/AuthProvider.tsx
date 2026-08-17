@@ -40,8 +40,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         mappedRole = "BDM";
       } else if (dbRole === "client_user") {
         mappedRole = "CLIENT";
+      } else if (dbRole === "sales_executive" || dbRole === "sales" || dbRole === "sales_rep") {
+        mappedRole = "SALES_EXECUTIVE";
+      } else if (dbRole === "hr_manager" || dbRole === "hr") {
+        mappedRole = "HR_MANAGER";
+      } else if (dbRole === "content_manager" || dbRole === "content") {
+        mappedRole = "CONTENT_MANAGER";
+      } else if (dbRole === "support_executive" || dbRole === "support") {
+        mappedRole = "SUPPORT_EXECUTIVE";
       } else {
-        // Support and other roles default to BDM or ADMIN based on dashboard permissions
+        // Fallback
         mappedRole = "ADMIN";
       }
 
@@ -86,6 +94,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return ["*"];
       case "BDM":
         return ["read:leads", "write:leads", "read:opportunities", "write:opportunities", "read:rfp", "write:rfp"];
+      case "SALES_EXECUTIVE":
+        return [
+          "read:leads",
+          "write:leads",
+          "read:followups",
+          "write:followups",
+          "read:notes",
+          "write:notes",
+          "read:activities",
+          "write:activities",
+          "read:opportunities",
+          "write:opportunities"
+        ];
       case "CLIENT":
         return ["read:projects", "write:requests", "read:documents"];
       default:

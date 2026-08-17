@@ -21,7 +21,7 @@ export const IndustryCard = ({ industry }) => {
           <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
             <Icon className="w-6 h-6 text-primary" />
           </div>
-          <span className="font-mono text-sm font-bold text-muted-foreground group-hover:text-primary transition-colors">
+          <span className="font-mono text-xs font-bold text-[#63f5e8] bg-[rgba(99,245,232,0.12)] border border-[rgba(99,245,232,0.3)] px-2.5 py-0.5 rounded group-hover:drop-shadow-[0_0_8px_rgba(99,245,232,0.8)] transition-all">
             {industry.id}
           </span>
         </div>

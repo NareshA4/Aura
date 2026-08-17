@@ -6,7 +6,6 @@ import { VisionSection } from "./components/VisionSection";
 import { MissionSection } from "./components/MissionSection";
 import { EngineeringPrinciples } from "./components/EngineeringPrinciples";
 import { ValuesSection } from "./components/ValuesSection";
-import { GlobalPresence } from "./components/GlobalPresence";
 import { LeadershipSection } from "./components/LeadershipSection";
 import { GovernanceSection } from "./components/GovernanceSection";
 import { SecurityTrust } from "./components/SecurityTrust";
@@ -23,7 +22,6 @@ export const AboutPage: React.FC = () => {
       <MissionSection />
       <EngineeringPrinciples />
       <ValuesSection />
-      <GlobalPresence />
       <LeadershipSection />
       <GovernanceSection />
       <SecurityTrust />

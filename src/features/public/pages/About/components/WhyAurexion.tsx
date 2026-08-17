@@ -13,7 +13,7 @@ export const WhyAurexion: React.FC = () => {
             return (
               <div key={index} className="group flex flex-col sm:flex-row items-start sm:items-center p-6 sm:p-8 bg-card/5 border border-border/20 rounded-lg hover:border-primary/40 hover:bg-card/10 transition-all duration-300">
                 <div className="flex items-center sm:w-1/3 mb-4 sm:mb-0">
-                  <span className="text-3xl font-mono text-primary/30 font-bold mr-6 group-hover:text-primary transition-colors">
+                  <span className="text-3xl font-mono text-[#63f5e8] font-bold mr-6 drop-shadow-[0_0_10px_rgba(99,245,232,0.7)] group-hover:drop-shadow-[0_0_16px_rgba(99,245,232,0.95)] transition-all">
                     {item.number}
                   </span>
                   <div className="w-10 h-10 rounded bg-primary/10 flex items-center justify-center mr-4">

@@ -39,7 +39,7 @@ export const ServicesOverview: React.FC = () => {
                   <div className="w-12 h-12 rounded flex items-center justify-center bg-primary/10 group-hover:bg-primary/20 transition-colors">
                     <Icon className="w-6 h-6 text-primary" />
                   </div>
-                  <span className="font-mono text-4xl font-bold text-border/40 group-hover:text-primary/20 transition-colors select-none">
+                  <span className="font-mono text-4xl font-bold text-[#63f5e8] drop-shadow-[0_0_10px_rgba(99,245,232,0.7)] group-hover:drop-shadow-[0_0_16px_rgba(99,245,232,0.95)] transition-all select-none">
                     {category.id}
                   </span>
                 </div>
